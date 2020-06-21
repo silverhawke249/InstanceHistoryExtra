@@ -114,6 +114,26 @@ for i, d in ipairs(elements) do
         e.editBox:SetJustifyH("CENTER")
         e.editBox:SetJustifyV("CENTER")
         e.editBox:SetFontObject(GameFontWhiteSmall)
+        e.editBox:SetScript("OnArrowPressed", function(self, key)
+            local vmin, vmax = self:GetParent():GetMinMaxValues()
+            local step = self:GetParent():GetValueStep()
+            local val = self:GetNumber()
+            -- increase/decrease value depending on step value
+            if key == "UP" then
+                val = val + step
+            elseif key == "DOWN" then
+                val = val - step
+            end
+            -- clamping
+            val = max(vmin, min(vmax, val))
+            -- set numbers (thanks floats)
+            self:GetParent():SetValue(val)
+            self:SetNumber(self:GetParent():GetValue(val))
+            -- save config, refresh progress bar
+            local db = InstanceHistoryExtraSV
+            db.config[self:GetParent().configKey] = self:GetNumber()
+            env.f.drawProgressBar()
+        end)
         e.editBox:SetScript("OnEnterPressed", function(self)
             local vmin, vmax = self:GetParent():GetMinMaxValues()
             local val = self:GetNumber()
