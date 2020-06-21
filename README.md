@@ -13,8 +13,7 @@ This addon...
   * For this case, typing `/ihex forcereset` will allow the addon to count the next instance correctly.
 
 ## Installing
-Downloading from [CurseForge](https://www.curseforge.com/wow/addons/instancehistoryextra) is recommended.
-Alternatively, download or clone from GitHub.
+~~Downloading from [CurseForge](https://www.curseforge.com/wow/addons/instancehistoryextra) is recommended.~~ CurseForge download under construction. Download or clone from GitHub.
 
 ## Configuration
 Type `/ihex` or go to `Main Menu → Interface Options → AddOns → Instance History Extra`.
