@@ -10,5 +10,8 @@ Alternatively, download or clone from GitHub.
 ## Configuration
 Type `/ihex` or go to `Main Menu → Interface Options → AddOns → Instance History Extra`.
 
+## Acknowledgements
+Most of the code was based on the [Instance History](https://wago.io/OXlZupyKm) WeakAura, which was in turn based on the [SavedInstance](https://www.curseforge.com/wow/addons/saved_instances) addon.
+
 ## License
 Copyright © 2020 silverhawke | [MIT License](https://opensource.org/licenses/MIT)
