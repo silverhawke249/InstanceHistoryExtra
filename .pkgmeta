@@ -1,0 +1,5 @@
+enable-nolib-creation: no
+manual-changelog: changelog.txt
+package-as: InstanceHistoryExtra
+ignore:
+  - README.md
