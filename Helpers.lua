@@ -18,9 +18,9 @@ function env.deepcopy(orig)
     if orig_type == 'table' then
         copy = {}
         for orig_key, orig_value in next, orig, nil do
-            copy[deepcopy(orig_key)] = deepcopy(orig_value)
+            copy[env.deepcopy(orig_key)] = env.deepcopy(orig_value)
         end
-        setmetatable(copy, deepcopy(getmetatable(orig)))
+        setmetatable(copy, env.deepcopy(getmetatable(orig)))
     else -- number, string, boolean, etc
         copy = orig
     end
@@ -56,7 +56,7 @@ function env.dump(t, depth)
                 print(pad(depth)..k.."="..v)
             elseif type(v) == "table" then
                 print(pad(depth)..k.."={")
-                dump(v, depth+1)
+                env.dump(v, depth+1)
                 print(pad(depth).."}")
             end
         end
@@ -73,7 +73,7 @@ function env.updateTable(t1, t2, onlyNilValues)
     for k, v in pairs(t2) do
         if type(v) == "table" then
             if t1[k] == nil then t1[k] = {} end
-            CsAlert.func.updateTable(t1[k], v)
+            env.updateTable(t1[k], v)
         else
             if not onlyNilValues or t1[k] == nil then
                 t1[k] = v
