@@ -488,14 +488,20 @@ function f.updateText(noCallback)
     end
 
     if db.config.reportLockedOnly then
-        if daycount == 30 then
+        if daycount == env.c.histLimit and count == env.c.histLimitHourly then
+            timestr = (rem and remday) and SecondsToTime(max(rem, remday)):lower() or "n/a"
+        elseif daycount == env.c.histLimit then
             timestr = remday and SecondsToTime(remday):lower() or "n/a"
-        elseif count == 5 then
+        elseif count == env.c.histLimitHourly then
             timestr = rem and SecondsToTime(rem):lower() or "n/a"
         end
     else
-        if count == 5 then
-            timestr = rem and SecondsToTime(rem):lower() or "n/a"
+        if count == env.c.histLimitHourly then
+            if daycount == env.c.histLimit then
+                timestr = (rem and remday) and SecondsToTime(max(rem, remday)):lower() or "n/a"
+            else
+                timestr = rem and SecondsToTime(rem):lower() or "n/a"
+            end
         elseif daycount > 0 then
             timestr = remday and SecondsToTime(remday):lower() or "n/a"
         end
