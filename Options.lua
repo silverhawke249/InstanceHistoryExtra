@@ -16,22 +16,22 @@ InterfaceOptions_AddCategory(optionsFrame)
 local scale = UIParent:GetEffectiveScale()
 local swh, sh = floor(GetScreenWidth() * scale / 2), floor(GetScreenHeight() * scale)
 local elements = {
-    {type="check", text="Debug mode", key="debug"},
-    {type="check", text="Show server", key="showServer"},
-    {type="check", text="Report resets", key="reportResets"},
-    {type="check", text="Report time only when locked", key="reportLockedOnly",
+    {type="check", text="Debug Mode", key="debugMode"},
+    {type="check", text="Show Server", key="showServer"},
+    {type="check", text="Report Resets", key="reportResets"},
+    {type="check", text="Report Time Only When Locked", key="reportLockedOnly",
         desc="When disabled, will always report time until oldest instance expires (unless under hourly lock). Otherwise, only report time remaining when instance locked."
     },
-    {type="check", text="Colorize progress bar", key="colorProgress"},
+    {type="check", text="Colorize Progress Bar", key="colorProgress"},
     {type="padding"},
-    {type="slider", text="Display update interval", key="updateInterval", min=0.5, max=10, step=0.5,
+    {type="slider", text="Display Update Interval", key="updateInterval", min=0.5, max=10, step=0.5,
         desc="Number of seconds to wait between each display update."},
-    {type="slider", text="Display threshold", key="displayMin", min=1, max=30, step=1,
+    {type="slider", text="Display Threshold", key="displayMin", min=1, max=30, step=1,
         desc="Minimum number of instances before display appears."},
     {type="slider", text="Width", key="width", min=0, max=500, step=1},
     {type="slider", text="Height", key="height", min=0, max=100, step=1},
-    {type="slider", text="Horizontal position", key="xOffset", min=-swh, max=swh, step=1},
-    {type="slider", text="Vertical position", key="yOffset", min=0, max=sh, step=1},
+    {type="slider", text="Horizontal Position", key="xOffset", min=-swh, max=swh, step=1},
+    {type="slider", text="Vertical Position", key="yOffset", min=0, max=sh, step=1},
 }
 local xSpace = 290
 local xOfs = 20

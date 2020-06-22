@@ -144,7 +144,7 @@ function f.HistoryUpdate(forcereset, forcemesg)
         else
             env.debug("Location data resolved, no reset detected.")
 
-            --[[if db.config.debug then
+            --[[if db.config.debugMode then
                 print(db.sess.enterLoc.instance, db.sess.enterLoc.subzone, db.lastLoc.instance, db.lastLoc.subzone)
             end]]
         end
@@ -221,7 +221,7 @@ function f.HistoryUpdate(forcereset, forcemesg)
     local oldestrem = oldesttime and (oldesttime + env.c.histReapTime - now)
     local oldestremt = oldestrem and SecondsToTime(oldestrem,false,false,1):lower() or "n/a"
 
-    if db.config.debug then
+    if db.config.debugMode then
         local msg = livecnt.." live instances, oldest ("..(oldestkey or "none")..") expires in "..oldestremt..". Current Zone="..(newzone or "nil")
         if msg ~= db.sess.lasthistdbg then
             db.sess.lasthistdbg = msg
@@ -375,11 +375,10 @@ function f.updateProgress(noCallback)
             local v = db.History[k]
 
             if v.last >= start then
-                local o = {}
-
-                --modifying this cuz i get bothered by the little gap at the beginning
-                o.max = max(0, min(s.total, v.last - start))
-                o.min = max(0, min(s.total, v.create - start))
+                local o = {
+                    max = max(0, min(s.total, v.last - start)),
+                    min = max(0, min(s.total, v.create - start))
+                }
 
                 table.insert(s.additionalProgress, o)
             end

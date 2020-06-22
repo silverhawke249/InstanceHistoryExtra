@@ -1,13 +1,13 @@
 local addonName, env = ...
 
 env.configDefaults = {
-    displayMin       = 2,
-    updateInterval   = 5,
-    debug            = false,
+    debugMode        = false,
     showServer       = false,
     reportResets     = false,
     reportLockedOnly = false,
     colorProgress    = false,
+    updateInterval   = 5,
+    displayMin       = 2,
     width            = 300,
     height           = 15,
     xOffset          = 0,

@@ -7,7 +7,7 @@ end
 function env.debug(...)
     local db = InstanceHistoryExtraSV
 
-    if db.config.debug then
+    if db.config.debugMode then
         env.chatMsg(...)
     end
 end
