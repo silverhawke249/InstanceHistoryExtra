@@ -323,8 +323,8 @@ end
 
 function f.updateProgress(noCallback)
     if not noCallback then
-        -- Run this function every second
-        C_Timer.After(1, f.updateProgress)
+        -- Originally this function runs every frame, but this is close enough
+        C_Timer.After(0.1, f.updateProgress)
     end
 
     if env.autoReset then
