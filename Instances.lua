@@ -16,7 +16,7 @@ function f.histZoneKey()
         return nil
     end
 
-    -- 40-man raids doesn't count
+    -- 40-man raids don't count
     if insttype == "raid" and maxPlayers == 40 then
         return nil
     end
@@ -219,7 +219,7 @@ function f.HistoryUpdate(forcereset, forcemesg)
     end
 
     local oldestrem = oldesttime and (oldesttime + env.c.histReapTime - now)
-    local oldestremt = (oldestrem and SecondsToTime(oldestrem,false,false,1)) or "n/a"
+    local oldestremt = oldestrem and SecondsToTime(oldestrem,false,false,1):lower() or "n/a"
 
     if db.config.debug then
         local msg = livecnt.." live instances, oldest ("..(oldestkey or "none")..") expires in "..oldestremt..". Current Zone="..(newzone or "nil")
@@ -506,6 +506,8 @@ function f.updateText(noCallback)
             timestr = remday and SecondsToTime(remday):lower() or "n/a"
         end
     end
+    
+    timestr = (timestr == "") and "a jiffy" or timestr
 
     if timestr then
         instanceStr = instanceStr .. string.format("\nMore instances will be available in %s.", timestr)
