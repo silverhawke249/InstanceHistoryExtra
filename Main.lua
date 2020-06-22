@@ -21,14 +21,21 @@ function env.onEvent.ADDON_LOADED(s, n)
     if n == addonName then
         -- Instantiate database
         local db = InstanceHistoryExtraSV or {}
-
         db.histGeneration = db.histGeneration or 1
         db.History = db.History or {}
         db.Instances = db.Instances or {}
         db.colorOffset = db.colorOffset or 0
         db.config = db.config or {}
+
         -- Fill in missing values
         env.updateTable(db.config, env.configDefaults, true)
+
+        -- Remove unused configs
+        for k, _ in pairs(db.config) do
+            if env.configDefaults[k] == nil then
+                db.config[k] = nil
+            end
+        end
 
         -- Session variable
         db.sess = {}
