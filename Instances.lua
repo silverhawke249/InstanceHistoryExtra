@@ -417,18 +417,22 @@ function f.displayProgress(s, n)
                 local chunk_end = min(1, chunk.max / s.total)
                 local chunk_length = (chunk.max - chunk.min) / s.total
 
-                t:SetSize(chunk_length * width, height)
-                t:SetPoint("TOPLEFT", p, "TOPLEFT", chunk_start * width, 0)
-                
-                if db.config.colorProgress then
-                    local c = (i - 1 + (n - #s.additionalProgress) + db.colorOffset) % #cmap
-                    t:SetVertexColor(unpack(cmap[c + 1]))
+                if chunk_length > 0 then
+                    t:SetSize(chunk_length * width, height)
+                    t:SetPoint("TOPLEFT", p, "TOPLEFT", chunk_start * width, 0)
+
+                    if db.config.colorProgress then
+                        local c = (i - 1 + (n - #s.additionalProgress) + db.colorOffset) % #cmap
+                        t:SetVertexColor(unpack(cmap[c + 1]))
+                    else
+                        t:SetVertexColor(1, 1, 1)
+                    end
+
+                    t:SetTexCoord(chunk_start, chunk_end, 0, 1)
+                    t:Show()
                 else
-                    t:SetVertexColor(1, 1, 1)
+                    t:Hide()
                 end
-                
-                t:SetTexCoord(chunk_start, chunk_end, 0, 1)
-                t:Show()
             else
                 t:Hide()
             end
