@@ -207,6 +207,7 @@ function f.HistoryUpdate(forcereset, forcemesg)
         if now > zi.last + env.c.histReapTime then
             env.debug("Reaping %s",zi.desc)
             db.History[zk] = nil
+            db.colorOffset = (db.colorOffset + 1) % #env.c.colors
         else
             livecnt = livecnt + 1
 
@@ -395,7 +396,7 @@ function f.displayProgress(s, n)
     local p = env.progressBar
     local width, height = p:GetSize()
     local db = InstanceHistoryExtraSV
-    local c1, c2 = unpack(env.c.colors)
+    local cmap = env.c.colors
 
     if not s.show then
         p:Hide()
@@ -412,25 +413,20 @@ function f.displayProgress(s, n)
         for i, t in ipairs(p.textures) do
             local chunk = s.additionalProgress[i]
             if chunk then
-                local chunk_start = chunk.min / s.total
-                local chunk_end = chunk.max / s.total
+                local chunk_start = max(0, chunk.min / s.total)
+                local chunk_end = min(1, chunk.max / s.total)
                 local chunk_length = (chunk.max - chunk.min) / s.total
 
                 t:SetSize(chunk_length * width, height)
                 t:SetPoint("TOPLEFT", p, "TOPLEFT", chunk_start * width, 0)
+                
                 if db.config.colorProgress then
-                    local c
-                    if n == 1 then
-                        c = 1
-                    else
-                        c = (n - #s.additionalProgress + i - 1) / (n - 1)
-                    end
-                    t:SetVertexColor((c * (c2.r - c1.r) + c1.r) / 255,
-                                     (c * (c2.g - c1.g) + c1.g) / 255,
-                                     (c * (c2.b - c1.b) + c1.b) / 255)
+                    local c = (i - 1 + (n - #s.additionalProgress) + db.colorOffset) % #cmap
+                    t:SetVertexColor(unpack(cmap[c + 1]))
                 else
                     t:SetVertexColor(1, 1, 1)
                 end
+                
                 t:SetTexCoord(chunk_start, chunk_end, 0, 1)
                 t:Show()
             else

@@ -25,6 +25,7 @@ function env.onEvent.ADDON_LOADED(s, n)
         db.histGeneration = db.histGeneration or 1
         db.History = db.History or {}
         db.Instances = db.Instances or {}
+        db.colorOffset = db.colorOffset or 0
         db.config = db.config or {}
         -- Fill in missing values
         env.updateTable(db.config, env.configDefaults, true)
@@ -95,6 +96,7 @@ function env.onEvent.RAID_INSTANCE_WELCOME()
 end
 
 function env.onEvent.PLAYER_CAMPING()
+    local db = InstanceHistoryExtraSV
     db.lastLoc = env.f.getLocation()
 end
 
@@ -159,10 +161,8 @@ function SlashCmdList.INSTANCEHISTEX(arg)
     end
 
     if t[1] == "forcereset" then
-        env.chatMsg("Assuming instance has been reset.")
+        env.chatMsg("Assuming current instance has been reset...")
         env.f.HistoryUpdate(true)
-    elseif t[1] == "repop" then
-        env.optionsFrame.populateOptions()
     else
         InterfaceOptionsFrame_OpenToCategory(env.optionsFrame)
     end
