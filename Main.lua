@@ -2,7 +2,6 @@ local addonName, env = ...
 
 env.configDefaults = {
     debugMode        = false,
-    showServer       = false,
     reportResets     = false,
     reportLockedOnly = false,
     colorProgress    = false,

@@ -47,10 +47,6 @@ function f.histZoneKey()
 
     local toonstr = env.c.thisToon
 
-    if db.config.showServer then
-        toonstr = strsplit(" - ", toonstr)
-    end
-
     local desc = toonstr .. ": " .. instname
 
     if diffname and #diffname > 0 then

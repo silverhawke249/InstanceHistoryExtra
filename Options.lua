@@ -16,14 +16,14 @@ InterfaceOptions_AddCategory(optionsFrame)
 local scale = UIParent:GetEffectiveScale()
 local swh, sh = floor(GetScreenWidth() * scale / 2), floor(GetScreenHeight() * scale)
 local elements = {
-    {type="check", text="Debug Mode", key="debugMode"},
-    {type="check", text="Show Server", key="showServer"},
-    {type="check", text="Report Resets", key="reportResets"},
+    {type="check", text="Debug Mode", key="debugMode",
+        desc="Prints debug messages to the default chat frame."},
+    {type="check", text="Report Resets", key="reportResets",
+        desc="Reports instance resets to group channels."},
     {type="check", text="Report Time Only When Locked", key="reportLockedOnly",
-        desc="When disabled, will always report time until oldest instance expires (unless under hourly lock). Otherwise, only report time remaining when instance locked."
-    },
-    {type="check", text="Colorize Progress Bar", key="colorProgress"},
-    {type="padding"},
+        desc="When disabled, will always report time until oldest instance expires, unless under hourly lock. Otherwise, only report time when locked out." },
+    {type="check", text="Colorize Progress Bar", key="colorProgress",
+        desc="Applies color to individual segments of the progress bar."},
     {type="slider", text="Display Update Interval", key="updateInterval", min=0.5, max=10, step=0.5,
         desc="Number of seconds to wait between each display update."},
     {type="slider", text="Display Threshold", key="displayMin", min=1, max=30, step=1,
