@@ -342,9 +342,9 @@ function f.updateProgress(noCallback)
             daycount = daycount + 1
         end
 
-        s.show = max(count, daycount) >= db.config.displayMin
+        s.show = daycount >= db.config.displayMin
 
-        if count >= db.config.displayMin then
+        if count >= db.config.displayMin and not db.config.force24H then
             s.total = 3600
         else
             s.total = 24*3600

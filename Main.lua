@@ -1,16 +1,17 @@
 local addonName, env = ...
 
 env.configDefaults = {
-    debugMode        = false,
-    reportResets     = false,
-    reportLockedOnly = false,
-    colorProgress    = false,
-    updateInterval   = 5,
-    displayMin       = 2,
-    width            = 300,
-    height           = 15,
-    xOffset          = 0,
-    yOffset          = 55,
+    debugMode           = false,
+    reportResets        = false,
+    reportLockedOnly    = false,
+    colorProgress       = true,
+    force24H            = false,
+    updateInterval      = 5,
+    displayMin          = 2,
+    width               = 300,
+    height              = 15,
+    xOffset             = 0,
+    yOffset             = 55,
 }
 
 -- EVENT HANDLERS --
