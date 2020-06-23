@@ -10,7 +10,7 @@ This addon...
 * Shows the duration you spent in an instance as a progress bar. The progress bar represents 24 hours or 1 hour, depending on how many instances you have entered recently.
 * Displays expected time until more instances are available.
 * Works in most cases, but most notably it cannot detect if a reset is done, the user is not the party leader, and the party leader doesn't use this addon.
-  * For this case, typing `/ihex forcereset` will allow the addon to count the next instance correctly.
+  * For this case, typing `/ihex forcereset` will allow the addon to count the next instance as a new one.
 
 ## Installing
 ~~Downloading from [CurseForge](https://www.curseforge.com/wow/addons/instancehistoryextra) is recommended.~~ CurseForge download under construction. Download or clone from GitHub.
