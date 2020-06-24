@@ -8,7 +8,7 @@ This addon...
 * Handles both the "30 instances per day" and the "5 instances per hour" limit.
   * It also handles the 30-minute auto-reset case!
 * Shows the duration you spent in an instance as a progress bar. The progress bar represents 24 hours or 1 hour, depending on how many instances you have entered recently and other settings.
-  * Generally, you can quickly toggle between 24h/1h view by holding Ctrl while hovering over the display.
+  * Generally, you can quickly toggle between 24h/1h view by holding Ctrl while hovering over the display. It isn't foolproof but it works.
 * Displays expected time until more instances are available.
 * Works in most cases, but most notably it cannot detect if: a reset is done, the user is not the party leader, and the party leader doesn't use this addon (or the WeakAura).
   * In this case, typing `/ihex forcereset` will allow the addon to count the next instance as a new one.
