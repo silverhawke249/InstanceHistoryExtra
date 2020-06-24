@@ -12,6 +12,7 @@ env.configDefaults = {
     height              = 15,
     xOffset             = 0,
     yOffset             = 55,
+    fontSize            = 10,
 }
 
 -- EVENT HANDLERS --
@@ -154,7 +155,7 @@ progressBar.textures = {}
 progressBar:SetBackdrop({bgFile = env.c.texture})
 progressBar:SetBackdropColor(0.3, 0.3, 0.3)
 local text = progressBar:CreateFontString(nil, "ARTWORK")
-text:SetFontObject(SystemFont_Outline_Small)
+text:SetFont(env.c.font, env.configDefaults.fontSize, "OUTLINE")
 text:SetTextColor(0.6, 0.6, 0.6)
 progressBar.text = text
 env.progressBar = progressBar

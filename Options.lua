@@ -35,6 +35,7 @@ local elements = {
     {type="slider", text="Height", key="height", min=0, max=100, step=1},
     {type="slider", text="Horizontal Position", key="xOffset", min=-swh, max=swh, step=1},
     {type="slider", text="Vertical Position", key="yOffset", min=0, max=sh, step=1},
+    {type="slider", text="Font Size", key="fontSize", min=8, max=32, step=1},
 }
 local xSpace = 290
 local xOfs = 20

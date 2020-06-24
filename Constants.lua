@@ -32,6 +32,7 @@ consts.transInstance = {
     [585] = 1154, -- Magisters' Terrace: issue #293 frFR
 }
 
+consts.font = "Fonts/FRIZQT__.TTF"
 consts.texture = "Interface/RaidFrame/Raid-Bar-Hp-Fill"
 consts.colors = {
     {1.0, 0.9294117647058824, 0.43529411764705883},

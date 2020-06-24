@@ -508,6 +508,10 @@ function f.updateText(noCallback)
         instanceStr = instanceStr .. string.format("\nMore instances will be available in %s.", timestr)
     end
 
+    local currentFontSize = select(2, fs:GetFont())
+    if currentFontSize ~= floor(db.config.fontSize + 0.5) then
+        fs:SetFont(env.c.font, db.config.fontSize, "OUTLINE")
+    end
     fs:SetText(instanceStr)
     fs:SetPoint("BOTTOM", env.progressBar, "TOP", 0, 4)
 end
