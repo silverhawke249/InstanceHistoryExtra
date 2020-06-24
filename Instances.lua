@@ -166,13 +166,7 @@ function f.HistoryUpdate(forcereset, forcemesg)
     if db.sess.histLastZone then
         local lz = db.History[db.sess.histLastZone]
         if lz then
-            -- if last touched at least 30 mins ago, it's a new instance
-            if now - lz.last >= 1800 then
-                f.generationAdvance()
-                newzone, newdesc, locked = f.histZoneKey()
-            else
-                lz.last = now
-            end
+            lz.last = now
         end
     end
 
@@ -182,6 +176,15 @@ function f.HistoryUpdate(forcereset, forcemesg)
     -- touch/create new zone
     if newzone then
         local nz = db.History[newzone]
+
+        -- if last touched at least 30 mins ago, it's a new instance
+        if nz and now - nz.last >= 1800 then
+            f.generationAdvance()
+            newzone, newdesc, locked = f.histZoneKey()
+            db.sess.histLastZone = newzone
+
+            nz = nil
+        end
 
         if not nz then
             nz = { create = now, desc = newdesc }
@@ -357,7 +360,7 @@ function f.updateProgress(noCallback)
         local ordered = {}
 
         for k,v in pairs(db.History) do
-            if k == czk then
+            if k == czk and now - v.last < 1800 then
                 v.last = now
             end
 
