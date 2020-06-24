@@ -1,5 +1,6 @@
 local addonName, env = ...
 
+-- Defaults, and instantiate saved variable
 env.configDefaults = {
     debugMode           = false,
     reportResets        = false,
@@ -14,14 +15,16 @@ env.configDefaults = {
     yOffset             = 55,
     fontSize            = 10,
 }
+InstanceHistoryExtraSV = InstanceHistoryExtraSV or {}
 
 -- EVENT HANDLERS --
 env.onEvent = {}
 
-function env.onEvent.ADDON_LOADED(s, n)
+function env.onEvent.ADDON_LOADED(...)
+    local n = select(2, ...)
     if n == addonName then
         -- Instantiate database
-        local db = InstanceHistoryExtraSV or {}
+        local db = InstanceHistoryExtraSV
         db.histGeneration = db.histGeneration or 1
         db.History = db.History or {}
         db.Instances = db.Instances or {}
@@ -48,13 +51,13 @@ function env.onEvent.ADDON_LOADED(s, n)
         -- Populate options frame
         env.optionsFrame.populateOptions()
 
-        InstanceHistoryExtraSV = db
         env.f.updateProgress()
         env.f.updateText()
     end
 end
 
-function env.onEvent.CHAT_MSG_SYSTEM(s, msg)
+function env.onEvent.CHAT_MSG_SYSTEM(...)
+    local msg = select(2, ...)
     local raiddiffmsg = ERR_RAID_DIFFICULTY_CHANGED_S:gsub("%%s",".+")
     local dungdiffmsg = ERR_DUNGEON_DIFFICULTY_CHANGED_S:gsub("%%s",".+")
 
@@ -108,7 +111,8 @@ function env.onEvent.PLAYER_CAMPING()
     db.lastLoc = env.f.getLocation()
 end
 
-function env.onEvent.CHAT_MSG_ADDON(s, pre, msg, channel, sender)
+function env.onEvent.CHAT_MSG_ADDON(...)
+    local pre, msg, _, sender = select(2, ...)
     if pre == env.c.prefix then
         if msg == "GENERATION_ADVANCE" and not UnitIsUnit(sender, "player") then
             env.f.HistoryUpdate(true)
@@ -179,9 +183,10 @@ progressBar:SetScript("OnLeave", function()
         env.f.drawProgressBar()
     end
 end)
-progressBar:SetScript("OnEvent", function(s, e, k, v)
+progressBar:SetScript("OnEvent", function(...)
     -- Ignore if it's not Ctrl key
-    if not k:find("CTRL") then return end
+    local key = select(3, ...)
+    if not key:find("CTRL") then return end
 
     local db = InstanceHistoryExtraSV
     db.config.force24H = not db.config.force24H
