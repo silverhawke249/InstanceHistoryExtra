@@ -160,6 +160,34 @@ text:SetTextColor(0.6, 0.6, 0.6)
 progressBar.text = text
 env.progressBar = progressBar
 
+-- Secret progress bar feature!!!
+progressBar:SetScript("OnEnter", function()
+    progressBar:RegisterEvent("MODIFIER_STATE_CHANGED")
+    -- In case Ctrl is held before entering
+    if IsControlKeyDown() then
+        local db = InstanceHistoryExtraSV
+        db.config.force24H = not db.config.force24H
+        env.f.drawProgressBar()
+    end
+end)
+progressBar:SetScript("OnLeave", function()
+    progressBar:UnregisterEvent("MODIFIER_STATE_CHANGED")
+    -- When cursor leaves frame, revert back if Ctrl is held
+    if IsControlKeyDown() then
+        local db = InstanceHistoryExtraSV
+        db.config.force24H = not db.config.force24H
+        env.f.drawProgressBar()
+    end
+end)
+progressBar:SetScript("OnEvent", function(s, e, k, v)
+    -- Ignore if it's not Ctrl key
+    if not k:find("CTRL") then return end
+
+    local db = InstanceHistoryExtraSV
+    db.config.force24H = not db.config.force24H
+    env.f.drawProgressBar()
+end)
+
 -- Handle slash command
 SLASH_INSTANCEHISTEX1 = "/ihex"
 function SlashCmdList.INSTANCEHISTEX(arg)
