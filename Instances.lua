@@ -353,6 +353,11 @@ function f.updateProgress(noCallback)
             s.total = 24*3600
         end
 
+        -- Only do a toggle if we won't make an empty progress bar
+        if env.progressBar.toggle and count > 0 then
+            s.total = s.total == 3600 and 24*3600 or 3600
+        end
+
         s.additionalProgress = {}
 
         local start = now - s.total

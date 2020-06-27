@@ -158,6 +158,7 @@ local progressBar = CreateFrame("Frame", nil, UIParent)
 progressBar.textures = {}
 progressBar:SetBackdrop({bgFile = env.c.texture})
 progressBar:SetBackdropColor(0.3, 0.3, 0.3)
+progressBar.toggle = false
 local text = progressBar:CreateFontString(nil, "ARTWORK")
 text:SetFont(env.c.font, env.configDefaults.fontSize, "OUTLINE")
 text:SetTextColor(0.6, 0.6, 0.6)
@@ -169,8 +170,7 @@ progressBar:SetScript("OnEnter", function()
     progressBar:RegisterEvent("MODIFIER_STATE_CHANGED")
     -- In case Ctrl is held before entering
     if IsControlKeyDown() then
-        local db = InstanceHistoryExtraSV
-        db.config.force24H = not db.config.force24H
+        progressBar.toggle = true
         env.f.drawProgressBar()
     end
 end)
@@ -178,18 +178,16 @@ progressBar:SetScript("OnLeave", function()
     progressBar:UnregisterEvent("MODIFIER_STATE_CHANGED")
     -- When cursor leaves frame, revert back if Ctrl is held
     if IsControlKeyDown() then
-        local db = InstanceHistoryExtraSV
-        db.config.force24H = not db.config.force24H
+        progressBar.toggle = false
         env.f.drawProgressBar()
     end
 end)
 progressBar:SetScript("OnEvent", function(...)
     -- Ignore if it's not Ctrl key
-    local key = select(3, ...)
+    local key, value = select(3, ...)
     if not key:find("CTRL") then return end
 
-    local db = InstanceHistoryExtraSV
-    db.config.force24H = not db.config.force24H
+    progressBar.toggle = value == 1 and true or false
     env.f.drawProgressBar()
 end)
 
