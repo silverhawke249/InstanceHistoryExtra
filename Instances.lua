@@ -27,7 +27,7 @@ function f.histZoneKey()
         return nil
     end  ]]
 
-    local db = InstanceHistoryExtraSV
+    local db = InstanceHistoryExtraSV[env.c.thisToon]
 
     -- Check if we're locked (using FindInstance so we don't complain about unsaved unknown instances)
     local truename = f.findInstance(instname, insttype == "raid")
@@ -71,7 +71,7 @@ end
 function f.findInstance(name, raid)
     if not name or #name == 0 then return nil end
 
-    local db = InstanceHistoryExtraSV
+    local db = InstanceHistoryExtraSV[env.c.thisToon]
 
     local nname = f.normalizeName(name)
     -- first pass, direct match
@@ -110,14 +110,15 @@ function f.findInstance(name, raid)
 end
 
 function f.generationAdvance()
-    local db = InstanceHistoryExtraSV
+    local db = InstanceHistoryExtraSV[env.c.thisToon]
     env.debug("HistoryUpdate generation advance")
     db.histGeneration = (db.histGeneration + 1) % 100000
     db.sess.delayedReset = false
 end
 
 function f.HistoryUpdate(forcereset, forcemesg)
-    local db = InstanceHistoryExtraSV
+    local db = InstanceHistoryExtraSV[env.c.thisToon]
+    local config = InstanceHistoryExtraSV.CONFIG
     db.histGeneration = db.histGeneration or 1
 
     if forcereset and f.histZoneKey() then -- delay reset until we zone out
@@ -220,7 +221,7 @@ function f.HistoryUpdate(forcereset, forcemesg)
     local oldestrem = oldesttime and (oldesttime + env.c.histReapTime - now)
     local oldestremt = oldestrem and SecondsToTime(oldestrem,false,false,1):lower() or "n/a"
 
-    if db.config.debugMode then
+    if config.debugMode then
         local msg = livecnt.." live instances, oldest ("..(oldestkey or "none")..") expires in "..oldestremt..". Current Zone="..(newzone or "nil")
         if msg ~= db.sess.lasthistdbg then
             db.sess.lasthistdbg = msg
@@ -238,7 +239,7 @@ function f.doExplicitReset(instancemsg, failed)
         return
     end
 
-    local db = InstanceHistoryExtraSV
+    local config = InstanceHistoryExtraSV.CONFIG
 
     if not failed then
         f.HistoryUpdate(true)
@@ -250,7 +251,7 @@ function f.doExplicitReset(instancemsg, failed)
         if not failed then
             C_ChatInfo.SendAddonMessage(env.c.prefix, "GENERATION_ADVANCE", reportchan)
         end
-        if db.config.reportResets then
+        if config.reportResets then
             local msg = instancemsg or RESET_INSTANCES
             msg = msg:gsub("\1241.+.+","") -- ticket 76, remove |1;; escapes on koKR
             SendChatMessage("All instances have been reset.", reportchan)
@@ -262,7 +263,7 @@ hooksecurefunc("ResetInstances", f.doExplicitReset)
 
 function f.zoneChanged(extraDelay)
     -- delay updates while settings stabilize
-    local db = InstanceHistoryExtraSV
+    local db = InstanceHistoryExtraSV[env.c.thisToon]
 
     local waittime = 3 + math.max(0,10 - GetFramerate()) + (extraDelay or 0)
     local d = time() + waittime
@@ -330,9 +331,10 @@ function f.updateProgress(noCallback)
         f.doAutoReset()
     end
 
-    local db = InstanceHistoryExtraSV
+    local db = InstanceHistoryExtraSV[env.c.thisToon]
+    local config = InstanceHistoryExtraSV.CONFIG
 
-    if GetTime() - db.lastDisplayUpdate >= db.config.updateInterval then
+    if GetTime() - db.lastDisplayUpdate >= config.updateInterval then
         local s = {}
 
         local count, daycount = 0, 0
@@ -341,13 +343,15 @@ function f.updateProgress(noCallback)
         for _, v in pairs(db.History) do
             if now - 3600 <= v.last and v.last <= now then
                 count = count + 1
+                daycount = daycount + 1
+            elseif now - 24*3600 <= v.last and v.last <= now then
+                daycount = daycount + 1
             end
-            daycount = daycount + 1
         end
 
-        s.show = daycount >= db.config.displayMin
+        s.show = daycount >= config.displayMin
 
-        if count >= db.config.displayMin and not db.config.force24H then
+        if count >= config.displayMin and not config.force24H then
             s.total = 3600
         else
             s.total = 24*3600
@@ -398,7 +402,8 @@ end
 function f.displayProgress(s, n)
     local p = env.progressBar
     local width, height = p:GetSize()
-    local db = InstanceHistoryExtraSV
+    local db = InstanceHistoryExtraSV[env.c.thisToon]
+    local config = InstanceHistoryExtraSV.CONFIG
     local cmap = env.c.colors
 
     if not s.show then
@@ -424,7 +429,7 @@ function f.displayProgress(s, n)
                     t:SetSize(chunk_length * width, height)
                     t:SetPoint("TOPLEFT", p, "TOPLEFT", chunk_start * width, 0)
 
-                    if db.config.colorProgress then
+                    if config.colorProgress then
                         local c = (i - 1 + (n - #s.additionalProgress) + db.colorOffset) % #cmap
                         t:SetVertexColor(unpack(cmap[c + 1]))
                     else
@@ -449,7 +454,8 @@ function f.updateText(noCallback)
     end
 
     local now = time()
-    local db = InstanceHistoryExtraSV
+    local db = InstanceHistoryExtraSV[env.c.thisToon]
+    local config = InstanceHistoryExtraSV.CONFIG
     local fs = env.progressBar.text
 
     local oldestTime, oldestDayTime
@@ -490,7 +496,7 @@ function f.updateText(noCallback)
         end
     end
 
-    if db.config.reportLockedOnly then
+    if config.reportLockedOnly then
         if daycount == env.c.histLimit and count == env.c.histLimitHourly then
             timestr = (rem and remday) and SecondsToTime(max(rem, remday)):lower() or "n/a"
         elseif daycount == env.c.histLimit then
@@ -517,20 +523,21 @@ function f.updateText(noCallback)
     end
 
     local currentFontSize = select(2, fs:GetFont())
-    if currentFontSize ~= floor(db.config.fontSize + 0.5) then
-        fs:SetFont(env.c.font, db.config.fontSize, "OUTLINE")
+    if currentFontSize ~= floor(config.fontSize + 0.5) then
+        fs:SetFont(env.c.font, config.fontSize, "OUTLINE")
     end
     fs:SetText(instanceStr)
     fs:SetPoint("BOTTOM", env.progressBar, "TOP", 0, 4)
 end
 
 function f.drawProgressBar()
-    local db = InstanceHistoryExtraSV
+    local db = InstanceHistoryExtraSV[env.c.thisToon]
+    local config = InstanceHistoryExtraSV.CONFIG
     local p = env.progressBar
     local scale = UIParent:GetEffectiveScale()
 
-    p:SetSize(db.config.width / scale, db.config.height / scale)
-    p:SetPoint("TOP", UIParent, "TOP", db.config.xOffset / scale, -db.config.yOffset / scale)
+    p:SetSize(config.width / scale, config.height / scale)
+    p:SetPoint("TOP", UIParent, "TOP", config.xOffset / scale, -config.yOffset / scale)
 
     -- redraw the sub-progress bars
     db.lastDisplayUpdate = 0

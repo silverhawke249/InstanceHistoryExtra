@@ -1,8 +1,8 @@
-## Interface: 11304
+## Interface: 11305
 ## Title: Instance History Extra
 ## Author: Silverhawke
 ## Notes: Tracks instances and lockouts.
-## Version: 1.0.1
+## Version: 1.0.2
 ## SavedVariables: InstanceHistoryExtraSV
 
 Constants.lua

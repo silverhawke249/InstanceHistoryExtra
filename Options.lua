@@ -5,8 +5,8 @@ local optionsFrame = CreateFrame("Frame", nil, UIParent)
 optionsFrame.name = "Instance History Extra"
 optionsFrame.settingChanges = {}
 function optionsFrame.default()
-    local db = InstanceHistoryExtraSV
-    db.config = env.deepcopy(env.configDefaults)
+    local config = InstanceHistoryExtraSV.CONFIG
+    config = env.deepcopy(env.configDefaults)
     optionsFrame.populateOptions()
     env.f.drawProgressBar()
 end
@@ -68,8 +68,8 @@ for i, d in ipairs(elements) do
         e.text:SetFontObject(GameFontHighlight)
         e:SetPoint("TOPLEFT", optionsFrame, "TOPLEFT", xOfs + x * xSpace, ypos)
         e:SetScript("OnClick", function(self)
-            local db = InstanceHistoryExtraSV
-            db.config[self.configKey] = self:GetChecked()
+            local config = InstanceHistoryExtraSV.CONFIG
+            config[self.configKey] = self:GetChecked()
             env.f.drawProgressBar()
         end)
         if d.desc then
@@ -98,8 +98,8 @@ for i, d in ipairs(elements) do
         e:SetScript("OnValueChanged", function(self, val)
             self.editBox:SetNumber(val)
             -- save config, refresh progress bar
-            local db = InstanceHistoryExtraSV
-            db.config[self.configKey] = val
+            local config = InstanceHistoryExtraSV.CONFIG
+            config[self.configKey] = val
             env.f.drawProgressBar()
         end)
         -- Create attached editbox
@@ -134,8 +134,8 @@ for i, d in ipairs(elements) do
             self:GetParent():SetValue(val)
             self:SetNumber(self:GetParent():GetValue(val))
             -- save config, refresh progress bar
-            local db = InstanceHistoryExtraSV
-            db.config[self:GetParent().configKey] = self:GetNumber()
+            local config = InstanceHistoryExtraSV.CONFIG
+            config[self:GetParent().configKey] = self:GetNumber()
             env.f.drawProgressBar()
         end)
         e.editBox:SetScript("OnEnterPressed", function(self)
@@ -149,8 +149,8 @@ for i, d in ipairs(elements) do
             self:SetNumber(self:GetParent():GetValue(val))
             self:ClearFocus()
             -- save config, refresh progress bar
-            local db = InstanceHistoryExtraSV
-            db.config[self:GetParent().configKey] = self:GetNumber()
+            local config = InstanceHistoryExtraSV.CONFIG
+            config[self:GetParent().configKey] = self:GetNumber()
             env.f.drawProgressBar()
         end)
         e.editBox:SetScript("OnEscapePressed", function(self)
@@ -189,8 +189,8 @@ text:SetText(env.c.authorInfo)
 text:SetPoint("BOTTOMRIGHT", optionsFrame, "BOTTOMRIGHT", -10, 10)
 
 function optionsFrame.populateOptions()
-    local db = InstanceHistoryExtraSV
-    for k, v in pairs(db.config) do
+    local config = InstanceHistoryExtraSV.CONFIG
+    for k, v in pairs(config) do
         local e = optionsFrame.formElements[k]
         if e then
             local type = e:GetObjectType()

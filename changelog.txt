@@ -1,3 +1,6 @@
+v1.0.2:
+- Make instance history separate for each character, following July 8's hotfix.
+
 v1.0.1:
 - Implement a better handling of the quick toggle feature.
 

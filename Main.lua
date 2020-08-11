@@ -24,20 +24,23 @@ function env.onEvent.ADDON_LOADED(...)
     local n = select(2, ...)
     if n == addonName then
         -- Instantiate database
-        local db = InstanceHistoryExtraSV
+        if not InstanceHistoryExtraSV[env.c.thisToon] then
+            InstanceHistoryExtraSV[env.c.thisToon] = {}
+        end
+        local db = InstanceHistoryExtraSV[env.c.thisToon]
         db.histGeneration = db.histGeneration or 1
         db.History = db.History or {}
         db.Instances = db.Instances or {}
         db.colorOffset = db.colorOffset or 0
-        db.config = db.config or {}
+        local config = InstanceHistoryExtraSV.CONFIG
 
         -- Fill in missing values
-        env.updateTable(db.config, env.configDefaults, true)
+        env.updateTable(config, env.configDefaults, true)
 
         -- Remove unused configs
-        for k, _ in pairs(db.config) do
+        for k, _ in pairs(config) do
             if env.configDefaults[k] == nil then
-                db.config[k] = nil
+                config[k] = nil
             end
         end
 
@@ -76,13 +79,14 @@ function env.onEvent.INSTANCE_BOOT_START()
 end
 
 function env.onEvent.INSTANCE_BOOT_STOP()
+    local db = InstanceHistoryExtraSV[env.c.thisToon]
     if env.f.InGroup() then
         db.sess.delayedReset = false
     end
 end
 
 function env.onEvent.GROUP_ROSTER_UPDATE()
-    local db = InstanceHistoryExtraSV
+    local db = InstanceHistoryExtraSV[env.c.thisToon]
     if db.sess.histInGroup and not env.f.InGroup() and -- ignore failed invites when solo
             not env.f.histZoneKey() then -- left group outside instance, resets now
         env.f.HistoryUpdate(true)
@@ -91,7 +95,7 @@ end
 
 function env.onEvent.PLAYER_ENTERING_WORLD()
     C_Timer.After(6, function()
-        local db = InstanceHistoryExtraSV
+        local db = InstanceHistoryExtraSV[env.c.thisToon]
         db.sess.enterLoc = env.f.getLocation()
     end)
 
@@ -107,7 +111,7 @@ function env.onEvent.RAID_INSTANCE_WELCOME()
 end
 
 function env.onEvent.PLAYER_CAMPING()
-    local db = InstanceHistoryExtraSV
+    local db = InstanceHistoryExtraSV[env.c.thisToon]
     db.lastLoc = env.f.getLocation()
 end
 
